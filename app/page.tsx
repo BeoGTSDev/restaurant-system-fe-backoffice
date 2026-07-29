@@ -1,4 +1,5 @@
 "use client";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 import { useCallback, useEffect, useState } from "react";
 
@@ -237,6 +238,7 @@ export default function DishUp() {
         <button className="stationDeselect" disabled={!selected.length} onClick={() => setSelected([])}>DESELECT</button>
       </div>
       <div className="stationClock"><small>{clock.toLocaleDateString("en-US", { weekday:"short", month:"short", day:"2-digit" })}</small><b>{clock.toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" })}</b></div>
+      <ThemeSwitcher />
       <div className="profileMenu">
         <button className="avatarButton" onClick={() => setProfileOpen(value => !value)}>{user.fullName.slice(0,1).toUpperCase()}</button>
         {profileOpen && <div className="profileDropdown"><b>{user.fullName}</b><small>{user.role}</small>
@@ -260,6 +262,7 @@ export default function DishUp() {
         <button disabled={!actionEnabled("CANCEL")} className="iconCommand cancel" title="Cancel" onClick={() => runAction("CANCEL")}>×</button>
         <button disabled={!actionEnabled("RETURN")} className="iconCommand" title="Return" onClick={() => runAction("RETURN")}>↶</button>
       </div>}
+      <ThemeSwitcher />
       <div className="profileMenu">
         <button className="avatarButton" onClick={() => setProfileOpen(value => !value)}>{user.fullName.slice(0,1).toUpperCase()}</button>
         {profileOpen && <div className="profileDropdown"><b>{user.fullName}</b><small>{user.role}</small>
