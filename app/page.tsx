@@ -71,7 +71,7 @@ async function api(path: string, token: string, options: RequestInit = {}) {
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.includes("application/json")) {
     throw new Error(response.status === 404
-      ? "Kitchen API is not available. Restart or redeploy the backend with the latest version."
+      ? "Kitchen service is currently unavailable. Please try again shortly."
       : `Kitchen API returned an invalid response (${response.status}).`);
   }
   const json = await response.json();
@@ -411,7 +411,7 @@ function Login({ onSuccess }: { onSuccess: (token: string, user: User) => void }
     finally { setLoading(false); }
   };
   return <main className="loginPage"><form onSubmit={submit}>
-    <div className="loginMark">ML</div><p>MAISON LUCAS / KITCHEN</p><h1>Dish Up</h1><span>Expected service and station coordination</span>
+    <div className="loginMark">ML</div><p>MAISON LUCAS / KITCHEN</p><h1>Dish Up</h1><span>Kitchen service and station coordination</span>
     {error && <div className="loginError">{error}</div>}
     <label>Staff code<input value={staffCode} onChange={event => setStaffCode(event.target.value)} placeholder="0001" autoFocus /></label>
     <label>4-digit PIN<input value={pin} onChange={event => setPin(event.target.value)} type="password" inputMode="numeric" maxLength={4} placeholder="----" /></label>
