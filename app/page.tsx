@@ -2,6 +2,7 @@
 import ThemeSwitcher from "./ThemeSwitcher";
 
 import { useCallback, useEffect, useState } from "react";
+import { calculateProgressPercent, calculateProgressTone, calculateRemainingSeconds, formatCountdown, formatStatusChangedAt } from "./kitchenRules";
 
 type Station = { code: string; name: string; color: string; prepMinutes: number };
 type KitchenItem = {
@@ -26,35 +27,16 @@ type KitchenEvent = { id:number; orderItemId:number; tableId:number; productName
 
 const API = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api").replace(/\/$/, "");
 const elapsed = (date: string) => Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 60000));
-const progressPercent = (item: KitchenItem) => Math.min(
-  100,
-  Math.max(0, Date.now() - new Date(item.cookingAt || Date.now()).getTime())
-    / ((item.prepMinutes || 10) * 60000) * 100
-);
-const progressTone = (item: KitchenItem) => {
-  const progress = progressPercent(item);
-  return progress >= 90 ? "danger" : progress >= 70 ? "warning" : "safe";
-};
+const progressPercent = (item: KitchenItem) => calculateProgressPercent(item);
+const progressTone = (item: KitchenItem) => calculateProgressTone(item);
 const remainingSeconds = (item: KitchenItem) => {
-  const startedAt = item.cookingAt;
-  if (!startedAt) return (item.prepMinutes || 10) * 60;
-  return Math.ceil(((item.prepMinutes || 10) * 60000 - (Date.now() - new Date(startedAt).getTime())) / 1000);
+  return calculateRemainingSeconds(item);
 };
 const countdown = (item: KitchenItem) => {
-  const remaining = remainingSeconds(item);
-  const absolute = Math.abs(remaining);
-  const minutes = Math.floor(absolute / 60).toString().padStart(2, "0");
-  const seconds = (absolute % 60).toString().padStart(2, "0");
-  return `${remaining < 0 ? "-" : ""}${minutes}:${seconds}`;
+  return formatCountdown(item);
 };
 const statusChangedAt = (item: KitchenItem) => {
-  const value = item.status === "Fired" ? item.firedAt
-    : item.status === "Cooking" ? item.cookingAt
-    : ["Pickup", "Ready"].includes(item.status) ? item.pickupAt
-    : item.status === "Served" ? item.servedAt
-    : item.status === "Pending" ? item.createdAt
-    : item.updatedAt;
-  return value ? new Date(value).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : "";
+  return formatStatusChangedAt(item);
 };
 const itemNoteWithoutDietaryAlert = (note?: string) => String(note || "")
   .split("·")
