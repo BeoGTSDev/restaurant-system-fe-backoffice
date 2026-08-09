@@ -1,3 +1,5 @@
+// Web support code used by the main page.
+// Pure display rules for kitchen groups, timers, and buttons; backend saves the final state.
 export type TimedKitchenItem = {
   status: string; createdAt: string; updatedAt: string; prepMinutes?: number;
   firedAt?: string; cookingAt?: string; pickupAt?: string; servedAt?: string;

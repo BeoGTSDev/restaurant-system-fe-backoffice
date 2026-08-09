@@ -1,4 +1,6 @@
 "use client";
+// Main web page: owns screen state and calls the backend.
+// Kitchen flow: login -> load queue -> select items -> send action -> reload saved state.
 import ThemeSwitcher from "./ThemeSwitcher";
 
 import { useCallback, useEffect, useState } from "react";
@@ -26,24 +28,32 @@ type User = { fullName: string; role: string; permissions: string[] };
 type KitchenEvent = { id:number; orderItemId:number; tableId:number; productName?:string; fromStatus?:string; toStatus:string; action:string; reason?:string; performerName?:string; createdAt:string };
 
 const API = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api").replace(/\/$/, "");
+// Screen action: runs the elapsed step. It reads page state, may call the backend, and updates the UI state.
 const elapsed = (date: string) => Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 60000));
+// Screen action: runs the progress percent step. It reads page state, may call the backend, and updates the UI state.
 const progressPercent = (item: KitchenItem) => calculateProgressPercent(item);
+// Screen action: runs the progress tone step. It reads page state, may call the backend, and updates the UI state.
 const progressTone = (item: KitchenItem) => calculateProgressTone(item);
+// Screen action: runs the remaining seconds step. It reads page state, may call the backend, and updates the UI state.
 const remainingSeconds = (item: KitchenItem) => {
   return calculateRemainingSeconds(item);
 };
+// Screen action: runs the countdown step. It reads page state, may call the backend, and updates the UI state.
 const countdown = (item: KitchenItem) => {
   return formatCountdown(item);
 };
+// Screen action: runs the status changed at step. It reads page state, may call the backend, and updates the UI state.
 const statusChangedAt = (item: KitchenItem) => {
   return formatStatusChangedAt(item);
 };
+// Screen action: runs the item note without dietary alert step. It reads page state, may call the backend, and updates the UI state.
 const itemNoteWithoutDietaryAlert = (note?: string) => String(note || "")
   .split("·")
   .map(value => value.trim())
   .filter(value => value && !/^dietary alert:/i.test(value) && !/^allergy:/i.test(value))
   .join(" / ");
 
+// Screen action: runs the api step. It reads page state, may call the backend, and updates the UI state.
 async function api(path: string, token: string, options: RequestInit = {}) {
   const response = await fetch(`${API}${path}`, {
     ...options,
@@ -135,6 +145,7 @@ export default function DishUp() {
     return () => window.clearTimeout(timer);
   }, [focusTableId, view, tables]);
 
+  // Screen action: changes and saves update station selection. It reads page state, may call the backend, and updates the UI state.
   const updateStationSelection = async (status: "Cooking" | "Pickup") => {
     const stationSelection = items.filter(item => selected.includes(item.id));
     const allowed = status === "Cooking"
@@ -157,6 +168,7 @@ export default function DishUp() {
     } finally { setUpdating(null); }
   };
 
+  // Screen action: handles the run action action. It reads page state, may call the backend, and updates the UI state.
   const runAction = async (action: string, selectedReason = "") => {
     const allowed: Record<string, string[]> = {
       FIRE: ["Pending"], ASAP: ["Pending", "Fired", "Remake"], DONE: ["Pickup", "Ready"],
@@ -199,6 +211,7 @@ export default function DishUp() {
   }} />;
   const selectedItems = tables.flatMap(table => table.items).filter(item => selected.includes(item.id));
   const selectedStatuses = selectedItems.map(item => item.status);
+  // Screen action: runs the action enabled step. It reads page state, may call the backend, and updates the UI state.
   const actionEnabled = (action: string) => {
     const allowed: Record<string, string[]> = {
       FIRE: ["Pending"], ASAP: ["Pending", "Fired", "Remake"], DONE: ["Pickup", "Ready"],
@@ -278,6 +291,7 @@ export default function DishUp() {
   </main>;
 }
 
+// Screen action: runs the logs board step. It reads page state, may call the backend, and updates the UI state.
 function LogsBoard({ events, filter, onFilter, onOpen }: { events: KitchenEvent[]; filter: string; onFilter:(value:string)=>void; onOpen:(event:KitchenEvent)=>void | Promise<void> }) {
   const statuses = ["all","Pending","Fired","Cooking","Pickup","Served","Remake","Cancelled"];
   const visible = filter === "all" ? events : events.filter(event => event.toStatus.toLowerCase() === filter.toLowerCase());
@@ -286,11 +300,13 @@ function LogsBoard({ events, filter, onFilter, onOpen }: { events: KitchenEvent[
     {visible.map(event => <article role="button" tabIndex={0} onClick={() => onOpen(event)} onKeyDown={key => key.key === "Enter" && onOpen(event)} key={event.id}><time>{new Date(event.createdAt).toLocaleString("en-GB")}</time><b>{event.tableId}</b><span>#{event.orderItemId}</span><strong>{event.productName || `Item #${event.orderItemId}`}</strong><em>{event.toStatus}</em><span>{event.performerName || "System"}</span></article>)}</div></section>;
 }
 
+// Screen action: runs the expected board step. It reads page state, may call the backend, and updates the UI state.
 function ExpectedBoard({ tables, selected, onSelect, mode, filter, onFilter, onClear }: {
   tables: TableTicket[];
   selected: number[]; onSelect: (id: number) => void; mode: string; filter: string; onFilter: (value: string) => void; onClear: () => void;
 }) {
   const [page, setPage] = useState(1);
+  // Screen action: runs the matches step. It reads page state, may call the backend, and updates the UI state.
   const matches = (item: KitchenItem) => {
     if (mode === "desserts" && !/dessert|pastry|cake|ice cream/i.test(item.categoryName)) return false;
     if (mode === "fired" && !["Fired","Cooking","Pickup","Ready","Remake"].includes(item.status)) return false;
@@ -305,6 +321,7 @@ function ExpectedBoard({ tables, selected, onSelect, mode, filter, onFilter, onC
   const totalPages = Math.max(1, Math.ceil(visibleTables.length / 5));
   const safePage = Math.min(page, totalPages);
   const pageTables = visibleTables.slice((safePage - 1) * 5, safePage * 5);
+  // Screen action: runs the filter count step. It reads page state, may call the backend, and updates the UI state.
   const filterCount = (value:string) => tables.flatMap(table => table.items).filter(item => value === "all" || (value === "new" && item.status === "Pending") || (value === "overtime" && item.status === "Cooking" && Boolean(item.cookingAt) && remainingSeconds(item) < 0) || (value === "cooking" && item.status === "Cooking") || (value === "pickup" && ["Pickup","Ready"].includes(item.status)) || (value === "remake" && (item.status === "Remake" || item.priority === "REMAKE"))).length;
   return <><div className="queueTools"><div>{["all","new","overtime","cooking","pickup","remake"].map(value =>
     <button key={value} className={filter === value ? "active" : ""} onClick={() => { setPage(1); onFilter(value); }}><b>{filterCount(value)}</b><span>{value}</span></button>)}</div>
@@ -337,6 +354,7 @@ function ExpectedBoard({ tables, selected, onSelect, mode, filter, onFilter, onC
   })}</section>}</>;
 }
 
+// Screen action: runs the station board step. It reads page state, may call the backend, and updates the UI state.
 function StationBoard({ items, updating, selected, onSelect }: { items: KitchenItem[]; updating: number | null; selected: number[]; onSelect: (id: number) => void }) {
   const groups = [
     { title: "Waiting", statuses: ["Pending", "Fired", "Remake"] },
@@ -361,10 +379,12 @@ function StationBoard({ items, updating, selected, onSelect }: { items: KitchenI
   </div>)}</section>;
 }
 
+// Screen action: runs the empty step. It reads page state, may call the backend, and updates the UI state.
 function Empty() {
   return <div className="empty"><span>OK</span><h2>Kitchen is clear</h2><p>New items will appear here automatically.</p></div>;
 }
 
+// Screen action: runs the access denied step. It reads page state, may call the backend, and updates the UI state.
 function AccessDenied({ user, onLogout }: { user: User; onLogout: () => void }) {
   return <main className="loginPage"><form onSubmit={event => { event.preventDefault(); onLogout(); }}>
     <div className="loginMark">ML</div>
@@ -376,11 +396,13 @@ function AccessDenied({ user, onLogout }: { user: User; onLogout: () => void }) 
   </form></main>;
 }
 
+// Screen action: runs the login step. It reads page state, may call the backend, and updates the UI state.
 function Login({ onSuccess }: { onSuccess: (token: string, user: User) => void }) {
   const [staffCode, setStaffCode] = useState("");
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  // Screen action: handles the submit action. It reads page state, may call the backend, and updates the UI state.
   const submit = async (event: React.FormEvent) => {
     event.preventDefault(); setLoading(true); setError("");
     try {

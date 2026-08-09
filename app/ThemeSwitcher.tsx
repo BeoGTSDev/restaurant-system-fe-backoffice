@@ -1,4 +1,5 @@
 "use client";
+// Web support code used by the main page.
 import{useEffect,useRef,useState}from"react";import{useTheme}from"./ThemeProvider";
 export default function ThemeSwitcher(){const{theme,resolvedTheme,setTheme}=useTheme();const[open,setOpen]=useState(false);const root=useRef<HTMLDivElement>(null);
 useEffect(()=>{const close=(event:PointerEvent)=>{if(!root.current?.contains(event.target as Node))setOpen(false)};document.addEventListener("pointerdown",close);return()=>document.removeEventListener("pointerdown",close)},[]);

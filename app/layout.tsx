@@ -1,3 +1,4 @@
+// Root layout shared by every page in this web app.
 import type { Metadata } from "next";
 import "./globals.css";
 import "./theme.css";

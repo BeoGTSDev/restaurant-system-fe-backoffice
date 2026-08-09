@@ -1,3 +1,4 @@
+// Source file: provides eslint.config code used by this application.
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
