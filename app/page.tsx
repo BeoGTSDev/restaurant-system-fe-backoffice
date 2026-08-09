@@ -411,12 +411,17 @@ function Login({ onSuccess }: { onSuccess: (token: string, user: User) => void }
       if (!response.ok) throw new Error(json.message || "Login failed.");
       if (!json.user.permissions.includes("update_order_status")) throw new Error("This account cannot operate Dish Up.");
       onSuccess(json.token, json.user);
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Login failed."); }
+    } catch (cause) {
+      const message = cause instanceof Error ? cause.message : "Login failed.";
+      setError(message === "Failed to fetch"
+        ? `Cannot reach the kitchen service at ${API}. Check that the backend is running, then try again.`
+        : message);
+    }
     finally { setLoading(false); }
   };
   return <main className="loginPage"><form onSubmit={submit}>
     <div className="loginMark">ML</div><p>MAISON LUCAS / KITCHEN</p><h1>Dish Up</h1><span>Kitchen service and station coordination</span>
-    {error && <div className="loginError">{error}</div>}
+    {error && <div className="loginError" role="alert" aria-live="polite">{error}</div>}
     <label>Staff code<input value={staffCode} onChange={event => setStaffCode(event.target.value)} placeholder="0001" autoFocus /></label>
     <label>4-digit PIN<input value={pin} onChange={event => setPin(event.target.value)} type="password" inputMode="numeric" maxLength={4} placeholder="----" /></label>
     <button disabled={loading}>{loading ? "Signing in..." : "Open kitchen display"}</button>

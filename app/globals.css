@@ -459,3 +459,76 @@ button { touch-action: manipulation; }
 .stationList .stationProgress.safe{background:#55b87966}
 .stationList .stationProgress.warning{background:#e6aa356e}
 .stationList .stationProgress.danger{background:#d9435278}
+
+/* Back-office visual alignment layer. Keeps all existing flows and selectors intact. */
+:root{
+  --bo-radius-sm:8px;
+  --bo-radius-md:12px;
+  --bo-radius-lg:18px;
+  --bo-control:44px;
+  --bo-shadow:0 12px 32px rgba(13,47,84,.10);
+}
+html,body{max-width:100%;overflow-x:hidden}
+button,input{min-width:0}
+button{transition:background-color .16s ease,border-color .16s ease,color .16s ease,box-shadow .16s ease,transform .12s ease}
+button:not(:disabled):active{transform:translateY(1px)}
+button:focus-visible,input:focus-visible{outline:3px solid #64b5f6;outline-offset:2px}
+
+/* Login and connection state */
+.loginPage{padding:24px;background:radial-gradient(circle at 50% 12%,#fff 0,#edf5fb 38%,#dce9f2 100%)}
+.loginPage form{width:min(460px,100%);padding:42px;border:1px solid #bfd1df;border-radius:var(--bo-radius-lg);box-shadow:0 24px 70px rgba(17,49,77,.16)}
+.loginMark{width:68px;height:68px;margin-bottom:20px;border-color:#1565c0;box-shadow:0 0 0 7px #e3f2fd;color:#0d47a1;font-size:19px}
+.loginPage form>p{margin:0;color:#0d47a1;font-size:10px;letter-spacing:2.2px}
+.loginPage h1{margin:12px 0 8px;font-size:44px;line-height:1.05}
+.loginPage form>span{margin-bottom:28px;font-size:13px;line-height:1.5}
+.loginPage label{margin-top:18px;color:#405b70;font-size:10px;letter-spacing:1px}
+.loginPage input{height:52px;margin-top:8px;padding:0 16px;border-color:#a9bdcc;border-radius:var(--bo-radius-sm);background:#fbfdff;font-size:15px;font-weight:700;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
+.loginPage input:hover{border-color:#6d96b5}.loginPage input:focus{border-color:#1976d2;background:#fff;box-shadow:0 0 0 4px rgba(33,150,243,.12)}
+.loginPage form>button{height:52px;margin-top:24px;border-radius:var(--bo-radius-sm);background:linear-gradient(135deg,#0d47a1,#1565c0);font-size:15px;letter-spacing:.15px;box-shadow:0 8px 18px rgba(13,71,161,.22)}
+.loginPage form>button:not(:disabled):hover{background:linear-gradient(135deg,#0a3b88,#0d47a1);box-shadow:0 10px 24px rgba(13,71,161,.28)}
+.loginPage form>button:disabled{cursor:wait;opacity:.62;box-shadow:none}
+.loginError{margin:0 0 6px;padding:12px 14px;border-radius:var(--bo-radius-sm);font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+
+/* Global operational controls */
+.topbar{height:auto;min-height:76px;padding:8px 14px;gap:8px}
+.dateClock{width:94px;flex-basis:94px}.viewSwitch{gap:6px;padding-inline:8px}.viewSwitch button{min-width:68px;height:58px;border-radius:var(--bo-radius-sm)}
+.viewSwitch button i{width:30px;height:30px;font-size:15px}.viewSwitch button.active{background:#e3f2fd;box-shadow:inset 0 -3px #1976d2}
+.topbar .commandBar{display:grid;grid-template-columns:repeat(4,minmax(72px,1fr)) repeat(2,48px);gap:7px}
+.topbar .commandBar button{width:100%;min-width:0;height:48px;border-radius:var(--bo-radius-sm);font-size:12px}
+.topbar .commandBar .iconCommand{width:48px;min-width:48px;height:48px}
+.themeButton,.avatarButton{width:44px;height:44px;min-width:44px}
+.profileDropdown{top:52px;border-radius:var(--bo-radius-md);box-shadow:var(--bo-shadow);overflow:hidden}.profileDropdown button{min-height:40px;height:auto;padding:8px}
+.errorbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:12px 18px;padding:12px 14px;border-radius:var(--bo-radius-sm);line-height:1.4}.errorbar button{float:none;min-height:36px;flex:0 0 auto;padding:0 12px;border:1px solid currentColor;border-radius:7px;text-decoration:none}
+
+.queueTools{min-height:64px;padding:8px 18px;gap:10px}.queueTools>div{gap:8px}.queueTools>div button{min-width:86px;height:46px;padding:4px 12px;border-radius:var(--bo-radius-sm)}
+.queueTools>div button b{font-size:18px}.queueTools>div button span{font-size:8px}.selectionControls button,.pager button{min-height:40px;border-radius:7px}
+.expectedGrid{gap:12px;padding:14px 18px 28px}.tableTicket{border-radius:var(--bo-radius-md);box-shadow:var(--bo-shadow)}
+.ticketHead{min-height:68px;padding:10px 12px}.ticketItems{padding:0 10px}.expectedItem{border-radius:6px}.expectedItem+.expectedItem{margin-top:2px}
+.expectedItem .qty{border-radius:6px}.itemState em{border-radius:6px}.courseStrip,.allergyHeader,.requestHeader{padding-inline:12px}
+
+.stationHeader{min-height:76px;height:auto;padding:8px 16px;gap:14px}.stationCommands{display:grid;grid-template-columns:repeat(3,minmax(126px,1fr));gap:7px}.stationCommands button{width:100%;height:46px;padding:0 12px;border-radius:var(--bo-radius-sm)}
+.stationBoard{gap:12px}.stationColumn{border-radius:var(--bo-radius-md);box-shadow:var(--bo-shadow)}.stationColumn>header{border-radius:var(--bo-radius-md) var(--bo-radius-md) 0 0}
+.stationCard{border-radius:var(--bo-radius-sm)}
+.logFilters{gap:8px}.logFilters button{min-height:42px;border-radius:var(--bo-radius-sm)}.logTable{border-radius:var(--bo-radius-md);overflow:hidden;box-shadow:var(--bo-shadow)}
+.failDialog{border-radius:var(--bo-radius-md);overflow:hidden}.failDialog>header button{border-radius:7px}.failDialog>div{gap:9px}.failDialog>div button{border-radius:var(--bo-radius-sm)}
+
+@media(max-width:1180px){
+  .topbar{align-items:flex-start;flex-wrap:wrap}.dateClock{height:58px}.viewSwitch{max-width:calc(100% - 160px);height:58px}.topbar .commandBar{order:3;width:100%;grid-template-columns:repeat(6,1fr)}
+  .topbar .commandBar .iconCommand{width:100%;min-width:0}.topbar>.themeSwitcher,.topbar>.profileMenu{margin-top:7px}
+  .stationHeader{grid-template-columns:minmax(160px,1fr) minmax(390px,2fr) auto auto}.stationClock{display:none}
+}
+@media(max-width:760px){
+  .loginPage{padding:16px}.loginPage form{padding:30px 22px}.loginPage h1{font-size:38px}
+  .topbar{padding:8px}.dateClock{position:static;flex:0 0 82px;width:82px;background:transparent}.dateClock b{font-size:22px}.viewSwitch{order:2;max-width:none;width:calc(100% - 98px);height:54px;padding:0}.viewSwitch button{min-width:62px;height:52px}
+  .topbar>.themeSwitcher,.topbar>.profileMenu{margin-top:5px}.topbar .commandBar{order:4;grid-template-columns:repeat(3,1fr);width:100%}.topbar .commandBar button,.topbar .commandBar .iconCommand{height:44px}
+  .queueTools{align-items:stretch;padding:8px;flex-direction:column}.queueTools>div{width:100%;overflow-x:auto}.queueTools>div button{min-width:82px;height:44px}.selectionControls{width:100%;justify-content:space-between}
+  .expectedGrid,.logsPage,.stationBoard{padding-left:8px;padding-right:8px}.expectedGrid{grid-template-columns:1fr;overflow:visible}.tableTicket{width:100%}
+  .stationHeader{grid-template-columns:1fr auto auto;padding:8px}.stationHeader>div:first-child{min-width:0}.stationHeader h1{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stationCommands{grid-column:1/-1;order:4;grid-template-columns:repeat(3,1fr);width:100%}.stationCommands button{min-width:0;height:44px;font-size:9px}.stationMode{height:auto;min-height:100vh;overflow:auto}.stationMode .stationBoard{height:auto;overflow:visible;grid-template-columns:1fr}.stationMode .stationColumn{height:min(420px,52vh)}
+  .failDialog>div{grid-template-columns:1fr}.logFilters button{min-width:88px}.errorbar{margin:8px;align-items:flex-start}
+}
+@media(max-width:420px){
+  .loginPage form{padding:26px 18px}.loginMark{width:60px;height:60px}.loginPage h1{font-size:35px}.loginPage input,.loginPage form>button{height:50px}
+  .viewSwitch{width:100%;order:3}.topbar .commandBar{order:4;grid-template-columns:repeat(2,1fr)}.topbar>.themeSwitcher,.topbar>.profileMenu{margin-left:auto}
+  .expectedItem{grid-template-columns:40px minmax(0,1fr) 72px}.expectedItem .itemState{width:72px;min-width:72px}.ticketOrderer{display:none}.ticketHead h2{font-size:24px}
+  .stationCommands{grid-template-columns:1fr}.stationHeader{grid-template-columns:1fr auto}.stationHeader>.themeSwitcher{display:none}
+}
