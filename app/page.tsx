@@ -27,7 +27,10 @@ type TableTicket = {
 type User = { fullName: string; role: string; permissions: string[] };
 type KitchenEvent = { id:number; orderItemId:number; tableId:number; productName?:string; fromStatus?:string; toStatus:string; action:string; reason?:string; performerName?:string; createdAt:string };
 
-const API = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api").replace(/\/$/, "");
+const API = (
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "https://restaurant-system-backend-production-ac28.up.railway.app/api"
+).replace(/\/$/, "");
 // Screen action: runs the elapsed step. It reads page state, may call the backend, and updates the UI state.
 const elapsed = (date: string) => Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 60000));
 // Screen action: runs the progress percent step. It reads page state, may call the backend, and updates the UI state.
