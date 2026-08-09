@@ -532,3 +532,41 @@ button:focus-visible,input:focus-visible{outline:3px solid #64b5f6;outline-offse
   .expectedItem{grid-template-columns:40px minmax(0,1fr) 72px}.expectedItem .itemState{width:72px;min-width:72px}.ticketOrderer{display:none}.ticketHead h2{font-size:24px}
   .stationCommands{grid-template-columns:1fr}.stationHeader{grid-template-columns:1fr auto}.stationHeader>.themeSwitcher{display:none}
 }
+
+/* Defense release: stable kitchen geometry and readable ticket content. */
+.expectedItem,
+.expectedItem > div:not(.itemState),
+.expectedItem > div:not(.itemState) b {
+  color:#111927;
+}
+.expectedItem > div:not(.itemState) small { color:#596575; }
+
+@media(min-width:761px){
+  .stationHeader{
+    grid-template-columns:minmax(220px,1fr) minmax(420px,auto) auto auto;
+  }
+  .stationCommands{
+    width:min(560px,42vw);
+    grid-template-columns:repeat(3,minmax(120px,1fr));
+  }
+}
+
+@media(max-width:1180px) and (min-width:761px){
+  .stationHeader{
+    grid-template-columns:minmax(180px,1fr) auto auto;
+  }
+  .stationCommands{
+    grid-column:1/-1;
+    width:100%;
+    order:4;
+  }
+  .stationMode .stationBoard{height:calc(100vh - 138px)}
+}
+
+@media(max-width:760px){
+  .stationHeader{position:relative}
+  .stationCommands{width:100%}
+  .stationColumn>.stationList{grid-auto-rows:minmax(66px,auto)}
+  .stationList .stationCard,
+  .stationList .stationCardRow{height:auto;min-height:66px}
+}

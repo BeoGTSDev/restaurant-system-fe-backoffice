@@ -30,7 +30,9 @@ type KitchenEvent = { id:number; orderItemId:number; tableId:number; productName
 const API = (
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "https://restaurant-system-backend-production-ac28.up.railway.app/api"
-).replace(/\/$/, "");
+)
+  .replace(/^NEXT_PUBLIC_API_BASE_URL=/, "")
+  .replace(/\/$/, "");
 // Screen action: runs the elapsed step. It reads page state, may call the backend, and updates the UI state.
 const elapsed = (date: string) => Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 60000));
 // Screen action: runs the progress percent step. It reads page state, may call the backend, and updates the UI state.
@@ -121,11 +123,12 @@ export default function DishUp() {
         setTables(result.data.tables || []); setItems(result.data.items || []);
       } else if (view !== "station") {
         const result = await api("/kitchen/expected", token);
-        setTables(result.data.tables);
-        setItems(result.data.items);
+        setTables(result.data.tables || []);
+        setItems(result.data.items || []);
       } else {
         const result = await api(`/kitchen/stations/${stationCode}`, token);
-        setItems(result.data.items);
+        setTables([]);
+        setItems(result.data.items || []);
       }
       setError("");
     } catch (cause) {
